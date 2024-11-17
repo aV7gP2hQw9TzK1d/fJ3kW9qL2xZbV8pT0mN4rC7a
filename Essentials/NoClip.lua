@@ -23,7 +23,7 @@ local character = player.Character or player.CharacterAdded:Wait()
 local mouse = player:GetMouse()
 
 mouse.KeyDown:Connect(function(key)
-    if key == "e" then
+    if key == "z" then
         noclip = not noclip
 
         if not StealthMode then
