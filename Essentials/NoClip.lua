@@ -22,20 +22,48 @@ local character = player.Character or player.CharacterAdded:Wait()
 
 local mouse = player:GetMouse()
 
+-- Function to toggle noclip
+local function toggleNoclip()
+    noclip = not noclip
+
+    if not StealthMode then
+        Indicator.Text = "Noclip: " .. (noclip and "Enabled" or "Disabled")
+    end
+
+    -- Apply noclip
+    for _, v in pairs(character:GetDescendants()) do
+        pcall(function()
+            if v:IsA("BasePart") then
+                v.CanCollide = not noclip
+            end
+        end)
+    end
+end
+
+-- Toggle noclip on pressing the "e" key
 mouse.KeyDown:Connect(function(key)
     if key == "z" then
-        noclip = not noclip
+        toggleNoclip()
+    end
+end)
 
-        if not StealthMode then
-            Indicator.Text = "Noclip: " .. (noclip and "Enabled" or "Disabled")
+-- Ensure noclip works after respawn
+player.CharacterAdded:Connect(function(newCharacter)
+    character = newCharacter
+    if noclip then
+        -- Apply noclip to the new character parts
+        for _, v in pairs(character:GetDescendants()) do
+            pcall(function()
+                if v:IsA("BasePart") then
+                    v.CanCollide = false
+                end
+            end)
         end
     end
 end)
 
+-- Continuous check for noclip state
 while true do
-    player = game.Players.LocalPlayer
-    character = player.Character
-
     if noclip then
         for _, v in pairs(character:GetDescendants()) do
             pcall(function()
@@ -45,6 +73,5 @@ while true do
             end)
         end
     end
-
     game:GetService("RunService").Stepped:wait()
 end
