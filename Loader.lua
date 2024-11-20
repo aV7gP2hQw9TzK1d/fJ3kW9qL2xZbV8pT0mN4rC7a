@@ -10,6 +10,18 @@
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 
+-- Aimbot Settings
+getgenv().Aimbot = {
+    Status = false, -- Initially set to false
+    Keybind = 'RightClick',
+    Hitpart = 'Head',
+    Prediction = {
+        X = 0,
+        Y = 0,
+    },
+    Smoothness = 0, 
+}
+
 -- Essentials
 local players = game:GetService("Players")
 local runService = game:GetService("RunService")
@@ -311,6 +323,67 @@ Visuals:AddSlider({
 	end    
 })
 
+-- Game Scripts Tab
+local Combat = Window:MakeTab({
+	Name = "Combat",
+	Icon = "rbxassetid://813297130",
+	PremiumOnly = false
+})
+
+local Section = Combat:AddSection({
+	Name = "Aimbot"
+})
+
+Combat:AddToggle({
+	Name = "Aimbot [ RCLICK ]",
+	Default = false,
+	Callback = function(Value)
+		getgenv().Aimbot.Status = Value
+	end    
+})
+
+local Section = Combat:AddSection({
+	Name = "Aimbot Configuration"
+})
+
+Combat:AddSlider({
+	Name = "Smoothness",
+	Min = 0,
+	Max = 20,
+	Default = 0,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 0.1,
+	ValueName = "Smoothness",
+	Callback = function(Value)
+		getgenv().Aimbot.Smoothness = Value
+	end    
+})
+
+Combat:AddSlider({
+	Name = "Prediction X",
+	Min = 0,
+	Max = 20,
+	Default = 0,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 0.1,
+	ValueName = "PredictionX",
+	Callback = function(Value)
+		getgenv().Aimbot.Prediction.X = Value
+	end    
+})
+
+Combat:AddSlider({
+	Name = "Prediction Y",
+	Min = 0,
+	Max = 20,
+	Default = 0,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 0.1,
+	ValueName = "PredictionY",
+	Callback = function(Value)
+		getgenv().Aimbot.Prediction.Y = Value
+	end    
+})
 -- Game Tab
 local Game = Window:MakeTab({
 	Name = "Game",
@@ -576,5 +649,77 @@ local function antiafkfc()
 
 	UserInputService.InputBegan:Fire(inputObject, false)
 end
+
+-- Optimized Aimbot Code Implementation
+local RunService = game:GetService('RunService')
+local Players = game:GetService('Players')
+local UserInputService = game:GetService('UserInputService')
+local Camera = game.Workspace.CurrentCamera
+local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
+
+local Player = nil
+local isAiming = false
+
+-- Function to Find Closest Player with Team Check
+local function GetClosestPlayer()
+    local ClosestDistance, ClosestPlayer = math.huge, nil
+    for _, otherPlayer in ipairs(Players:GetPlayers()) do
+        if otherPlayer ~= LocalPlayer and otherPlayer.Team ~= LocalPlayer.Team and otherPlayer.Character and otherPlayer.Character:FindFirstChild(getgenv().Aimbot.Hitpart) then
+            local Head = otherPlayer.Character[getgenv().Aimbot.Hitpart]
+            local ScreenPosition, onScreen = Camera:WorldToViewportPoint(Head.Position)
+            if onScreen then
+                local Distance = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(ScreenPosition.X, ScreenPosition.Y)).Magnitude
+                if Distance < ClosestDistance then
+                    ClosestPlayer = otherPlayer
+                    ClosestDistance = Distance
+                end
+            end
+        end
+    end
+    return ClosestPlayer
+end
+
+-- Input Handling
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.UserInputType == Enum.UserInputType.MouseButton2 then
+        isAiming = true
+        Player = GetClosestPlayer()
+    end
+end)
+
+UserInputService.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton2 then
+        isAiming = false
+        Player = nil
+    end
+end)
+
+-- Aimbot Functionality on RenderStepped
+RunService.RenderStepped:Connect(function()
+    if not (getgenv().Aimbot.Status and Player and Player.Character and Player.Character:FindFirstChild(getgenv().Aimbot.Hitpart)) then
+        return
+    end
+    
+    local Target = Player.Character[getgenv().Aimbot.Hitpart]
+    local targetPosition = Target.Position + Target.Velocity * Vector3.new(getgenv().Aimbot.Prediction.X, getgenv().Aimbot.Prediction.Y, getgenv().Aimbot.Prediction.X)
+    local currentPosition = Camera.CFrame.Position
+    local targetDirection = (targetPosition - currentPosition).Unit
+
+    if isAiming then
+        local currentLookVector = Camera.CFrame.LookVector
+        local smoothFactor = getgenv().Aimbot.Smoothness
+        local newLookVector
+
+        if smoothFactor == 0 then
+            newLookVector = targetDirection
+        else
+            newLookVector = currentLookVector:Lerp(targetDirection, 1 / smoothFactor)
+        end
+
+        Camera.CFrame = CFrame.new(currentPosition, currentPosition + newLookVector)
+    end
+end)
 
 --///////////////////////////////////////////////////
