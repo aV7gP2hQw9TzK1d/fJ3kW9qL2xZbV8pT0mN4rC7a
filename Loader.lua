@@ -6,6 +6,8 @@
 
 --///////////////////////////////////////////////////
 
+-- Extra
+
 -- Misc
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
@@ -321,6 +323,17 @@ Visuals:AddSlider({
 	Callback = function(FOV1)
 		game.Workspace.Camera.FieldOfView = FOV1
 	end    
+})
+
+local Section = Visuals:AddSection({
+	Name = "Graphics"
+})
+
+Visuals:AddButton({
+	Name = "Super Low GFX [ FPS BOOSTER ]",
+	Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/wasundefined/Legacy/refs/heads/main/Essentials/Low%20GFX.lua'))()
+  	end    
 })
 
 -- Game Scripts Tab
