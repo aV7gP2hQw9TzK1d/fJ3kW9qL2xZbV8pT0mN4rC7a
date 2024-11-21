@@ -7,8 +7,7 @@ A Roblox script that has everything you are looking for.
 - ESP [ Box and Highlight ]
 - Tracers
 - Super Low GFX [ FPS BOOSTER ] [ For Potato PC's ]
-- Massive Script Hub
-- And alot more!
+- Massive Script Hub and **ALOT** more!
 
 # 🏮 Why Legacy?
 - Keyless
