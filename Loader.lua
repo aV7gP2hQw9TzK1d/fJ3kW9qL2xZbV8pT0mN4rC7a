@@ -7,6 +7,116 @@
 --///////////////////////////////////////////////////
 
 -- Extra
+-- X-Ray Configuration
+
+-- Table to store original transparency values
+local originalTransparencies = {}
+
+-- Function to enable X-ray vision across the entire game
+local function enableXRay(transparencyLevel)
+    for _, obj in pairs(game:GetDescendants()) do
+        -- Check if the object is a part or mesh that can have transparency
+        if obj:IsA("BasePart") or obj:IsA("MeshPart") then
+            -- Store original transparency if not already stored
+            if originalTransparencies[obj] == nil then
+                originalTransparencies[obj] = obj.Transparency
+            end
+            -- Set to desired transparency level (e.g., 0.5 for semi-transparent)
+            obj.Transparency = transparencyLevel
+        end
+    end
+end
+
+-- Function to disable X-ray vision and restore original transparency
+local function disableXRay()
+    for obj, originalTransparency in pairs(originalTransparencies) do
+        -- Restore the original transparency
+        if obj and obj.Parent then  -- Check if the object still exists
+            obj.Transparency = originalTransparency
+        end
+    end
+    -- Clear the table after restoring transparencies
+    originalTransparencies = {}
+end
+
+-- Tracers Configuration
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Camera = game.Workspace.CurrentCamera
+local LocalPlayer = Players.LocalPlayer
+
+local tracerColor = Color3.fromRGB(255, 0, 0) -- Red color for tracers
+local tracerThickness = 1 -- Thickness of the tracer line
+
+local tracers = {} -- Table to store tracers for each player
+local toggleStateEnemy = false
+local toggleStateEveryone = false
+
+-- Function to create a tracer line
+local function createTracer()
+    local tracer = Drawing.new("Line")
+    tracer.Color = tracerColor
+    tracer.Thickness = tracerThickness
+    tracer.Visible = false
+    return tracer
+end
+
+-- Function to update tracers based on toggle states
+local function updateTracers()
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            local tracer = tracers[player]
+            local character = player.Character
+            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+
+            if not tracer then
+                tracer = createTracer()
+                tracers[player] = tracer
+            end
+
+            -- Determine if we should draw the tracer
+            local showTracer = false
+            if toggleStateEveryone then
+                showTracer = true
+            elseif toggleStateEnemy and player.Team ~= LocalPlayer.Team then
+                showTracer = true
+            end
+
+            -- Project the position to the screen if we should show the tracer
+            if showTracer then
+                local screenPosition, onScreen = Camera:WorldToViewportPoint(humanoidRootPart.Position)
+                if onScreen then
+                    tracer.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2) -- Center of screen
+                    tracer.To = Vector2.new(screenPosition.X, screenPosition.Y) -- Player's position on screen
+                    tracer.Visible = true
+                else
+                    tracer.Visible = false -- Hide if player goes off-screen
+                end
+            else
+                tracer.Visible = false
+            end
+        end
+    end
+end
+
+-- Function to clean up tracers for players who have left
+local function removeTracer(player)
+    if tracers[player] then
+        tracers[player]:Remove()
+        tracers[player] = nil
+    end
+end
+
+-- Function to clean up all tracers
+local function clearAllTracers()
+    for _, tracer in pairs(tracers) do
+        tracer:Remove()
+    end
+    tracers = {}
+end
+
+-- Connect to remove tracers when a player leaves
+Players.PlayerRemoving:Connect(removeTracer)
 
 -- Misc
 local UserInputService = game:GetService("UserInputService")
@@ -22,6 +132,7 @@ getgenv().Aimbot = {
         Y = 0,
     },
     Smoothness = 0, 
+    TeamCheck = false, -- Default to true, meaning the aimbot will only target opposite team players
 }
 
 -- Essentials
@@ -104,11 +215,19 @@ end
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
 
 -- Main Window
-local Window = OrionLib:MakeWindow({Name = "Legacy | by wasundefined", HidePremium = false, SaveConfig = true, IntroText = "Legacy", ConfigFolder = "OrionTest"})
+local Window = OrionLib:MakeWindow({Name = "★ Legacy", HidePremium = false, SaveConfig = true, IntroIcon = "rbxassetid://1264515756", IntroText = "Legacy", ConfigFolder = "OrionTest"})
+
+-- Notifications
+OrionLib:MakeNotification({
+	Name = "Legacy",
+	Content = "Legacy is set! Made by wasundefined.",
+	Image = "rbxassetid://1264515756",
+	Time = 69420
+})
 
 -- Main Tab
 local Main = Window:MakeTab({
-	Name = "Main",
+	Name = "● Main",
 	Icon = "rbxassetid://170940873",
 	PremiumOnly = false
 })
@@ -134,7 +253,7 @@ Main:AddButton({
 
 -- Player Tab
 local Player = Window:MakeTab({
-	Name = "Player",
+	Name = "● Player",
 	Icon = "rbxassetid://12823489098",
 	PremiumOnly = false
 })
@@ -225,7 +344,7 @@ Player:AddSlider({
 
 -- Visuals Tab
 local Visuals = Window:MakeTab({
-	Name = "Visuals",
+	Name = "● Visuals",
 	Icon = "rbxassetid://13321848320",
 	PremiumOnly = false
 })
@@ -252,32 +371,6 @@ Visuals:AddToggle({
 
 local Section = Visuals:AddSection({
 	Name = "Highlight ESP"
-})
-
-Visuals:AddToggle({
-	Name = "Highlight ESP [ EVERYONE ]",
-	Default = false,
-	Callback = function(Value)
-        toggleState = Value
-        if Value then
-            -- Add highlights to all players
-            updateHighlights()
-
-            -- Listen for new players joining
-            connections["PlayerAdded"] = players.PlayerAdded:Connect(function(player)
-                player.CharacterAdded:Wait()
-                if toggleState then
-                    addHighlight(player)
-                end
-            end)
-        else
-            -- Remove all highlights and cleanup
-            for _, player in ipairs(players:GetPlayers()) do
-                removeHighlight(player)
-            end
-            cleanConnections()
-        end
-    end    
 })
 
 Visuals:AddToggle({
@@ -308,6 +401,66 @@ Visuals:AddToggle({
     end    
 })
 
+Visuals:AddToggle({
+	Name = "Highlight ESP [ EVERYONE ]",
+	Default = false,
+	Callback = function(Value)
+        toggleState = Value
+        if Value then
+            -- Add highlights to all players
+            updateHighlights()
+
+            -- Listen for new players joining
+            connections["PlayerAdded"] = players.PlayerAdded:Connect(function(player)
+                player.CharacterAdded:Wait()
+                if toggleState then
+                    addHighlight(player)
+                end
+            end)
+        else
+            -- Remove all highlights and cleanup
+            for _, player in ipairs(players:GetPlayers()) do
+                removeHighlight(player)
+            end
+            cleanConnections()
+        end
+    end    
+})
+
+local Section = Visuals:AddSection({
+	Name = "Tracers"
+})
+
+Visuals:AddToggle({
+    Name = "Tracers [ ENEMY ]",
+    Default = false,
+    Callback = function(Value)
+        toggleStateEnemy = Value
+        toggleStateEveryone = false -- Disable all-player mode if enemy toggle is active
+        if Value then
+            -- Update tracers for enemy players only
+            updateTracers()
+        else
+            clearAllTracers() -- Clear tracers if toggle is turned off
+        end
+    end
+})
+
+Visuals:AddToggle({
+    Name = "Tracers [ EVERYONE ]",
+    Default = false,
+    Callback = function(Value)
+        toggleStateEveryone = Value
+        toggleStateEnemy = false -- Disable enemy-only mode if all-players toggle is active
+        if Value then
+            -- Update tracers for all players
+            updateTracers()
+        else
+            clearAllTracers() -- Clear tracers if toggle is turned off
+        end
+    end
+})
+
 local Section = Visuals:AddSection({
 	Name = "FOV"
 })
@@ -316,7 +469,7 @@ Visuals:AddSlider({
 	Name = "Field Of View",
 	Min = 0,
 	Max = 120,
-	Default = 80,
+	Default = 70,
 	Color = Color3.fromRGB(60,60,60),
 	Increment = 1,
 	ValueName = "FOV",
@@ -336,9 +489,22 @@ Visuals:AddButton({
   	end    
 })
 
+Visuals:AddToggle({
+    Name = "X-Ray",
+    Default = false,
+    Callback = function(Value)
+        local transparencyLevel = 0.5 -- Set your preferred transparency level here
+        if Value then
+            enableXRay(transparencyLevel) -- Enable X-ray when toggle is on
+        else
+            disableXRay() -- Disable X-ray and restore transparency when toggle is off
+        end
+    end    
+})
+
 -- Game Scripts Tab
 local Combat = Window:MakeTab({
-	Name = "Combat",
+	Name = "● Combat",
 	Icon = "rbxassetid://813297130",
 	PremiumOnly = false
 })
@@ -357,6 +523,14 @@ Combat:AddToggle({
 
 local Section = Combat:AddSection({
 	Name = "Aimbot Configuration"
+})
+
+Combat:AddToggle({
+    Name = "Team Check",
+    Default = false,
+    Callback = function(Value)
+        getgenv().Aimbot.TeamCheck = Value
+    end    
 })
 
 Combat:AddSlider({
@@ -378,7 +552,7 @@ Combat:AddSlider({
 	Max = 20,
 	Default = 0,
 	Color = Color3.fromRGB(255,255,255),
-	Increment = 0.1,
+	Increment = 0.01,
 	ValueName = "PredictionX",
 	Callback = function(Value)
 		getgenv().Aimbot.Prediction.X = Value
@@ -391,7 +565,7 @@ Combat:AddSlider({
 	Max = 20,
 	Default = 0,
 	Color = Color3.fromRGB(255,255,255),
-	Increment = 0.1,
+	Increment = 0.01,
 	ValueName = "PredictionY",
 	Callback = function(Value)
 		getgenv().Aimbot.Prediction.Y = Value
@@ -399,7 +573,7 @@ Combat:AddSlider({
 })
 -- Game Tab
 local Game = Window:MakeTab({
-	Name = "Game",
+	Name = "● Game",
 	Icon = "rbxassetid://96996641562298",
 	PremiumOnly = false
 })
@@ -424,7 +598,7 @@ Game:AddButton({
 
 -- Useful Scripts Tab
 local US = Window:MakeTab({
-	Name = "Useful Scripts",
+	Name = "● Useful Scripts",
 	Icon = "rbxassetid://7414445494",
 	PremiumOnly = false
 })
@@ -456,7 +630,7 @@ US:AddButton({
 
 -- Game Scripts Tab
 local GS = Window:MakeTab({
-	Name = "Game Scripts",
+	Name = "● Game Scripts",
 	Icon = "rbxassetid://12684121161",
 	PremiumOnly = false
 })
@@ -475,7 +649,6 @@ GS:AddButton({
 
 
 -- Extra Scripts
-
 -- Box ESP Configuration
 _G.BoxESP = false
 
@@ -678,7 +851,11 @@ local isAiming = false
 local function GetClosestPlayer()
     local ClosestDistance, ClosestPlayer = math.huge, nil
     for _, otherPlayer in ipairs(Players:GetPlayers()) do
-        if otherPlayer ~= LocalPlayer and otherPlayer.Team ~= LocalPlayer.Team and otherPlayer.Character and otherPlayer.Character:FindFirstChild(getgenv().Aimbot.Hitpart) then
+        -- Check if the player is the local player, is on the same team, or has no character
+        if otherPlayer ~= LocalPlayer and
+           (not getgenv().Aimbot.TeamCheck or otherPlayer.Team ~= LocalPlayer.Team) and
+           otherPlayer.Character and
+           otherPlayer.Character:FindFirstChild(getgenv().Aimbot.Hitpart) then
             local Head = otherPlayer.Character[getgenv().Aimbot.Hitpart]
             local ScreenPosition, onScreen = Camera:WorldToViewportPoint(Head.Position)
             if onScreen then
@@ -734,5 +911,8 @@ RunService.RenderStepped:Connect(function()
         Camera.CFrame = CFrame.new(currentPosition, currentPosition + newLookVector)
     end
 end)
+
+-- Update tracers every frame
+RunService.RenderStepped:Connect(updateTracers)
 
 --///////////////////////////////////////////////////
