@@ -8,6 +8,7 @@ A Roblox script that has everything you are looking for.
 - Tracers
 - Super Low GFX [ FPS BOOSTER ] [ For Potato PC's ]
 - Massive Script Hub
+- And alot more!
 
 # 🏮 Why Legacy?
 - Keyless
