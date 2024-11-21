@@ -3,12 +3,16 @@ A Roblox script that has everything you are looking for.
 
 # 🏮 Features
 - Universal Stuff
+- Aimbot [ Configurable ]
+- ESP [ Box and Highlight ]
+- Tracers
+- Super Low GFX [ FPS BOOSTER ] [ For Potato PC's ]
 - Massive Script Hub
 
 # 🏮 Why Legacy?
 - Keyless
-- Contains Paid Scripts in its Script Hub for free
-- Free to use forever
+- Free
+- All-In-One Script
 
 # 🏮 Legacy Script
 ```lua
