@@ -611,6 +611,17 @@ local GS = Window:MakeTab({
 })
 
 local Section = GS:AddSection({
+	Name = "Arsenal Scripts"
+})
+
+GS:AddButton({
+	Name = "Arsenal - Aimbot | ESP | Infinite Ammo",
+	Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/tbao143/thaibao/main/ArsenalTbaoHubNew'))()
+  	end    
+})
+
+local Section = GS:AddSection({
 	Name = "Counter Blox Scripts"
 })
 
