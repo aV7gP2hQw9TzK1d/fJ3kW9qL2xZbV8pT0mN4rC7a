@@ -140,7 +140,10 @@ local players = game:GetService("Players")
 local runService = game:GetService("RunService")
 local localPlayer = players.LocalPlayer
 
--- Function to add highlight to a player
+-- Separate connection tables for each toggle
+local enemyConnections = {}
+local allConnections = {}
+
 local function addHighlight(player)
     if player.Character then
         if not player.Character:FindFirstChild("Highlight") then
@@ -152,27 +155,38 @@ local function addHighlight(player)
     end
 end
 
--- Function to remove highlight from a player
 local function removeHighlight(player)
     if player.Character and player.Character:FindFirstChild("Highlight") then
         player.Character.Highlight:Destroy()
     end
 end
 
-local connections = {}
-local toggleState = false
-local enemyToggleState = false
-
--- Function to update highlights for everyone
-local function updateHighlights()
+local function updateEnemyHighlights()
     for _, player in ipairs(players:GetPlayers()) do
-        if player ~= localPlayer then
+        if player.Team ~= localPlayer.Team and enemyToggleState then
             addHighlight(player)
         end
 
-        -- Listen for character respawns
-        if not connections[player] then
-            connections[player] = player.CharacterAdded:Connect(function()
+        -- Listen for character respawns for enemies only
+        if enemyToggleState and not enemyConnections[player] then
+            enemyConnections[player] = player.CharacterAdded:Connect(function()
+                if enemyToggleState and player.Team ~= localPlayer.Team then
+                    addHighlight(player)
+                end
+            end)
+        end
+    end
+end
+
+local function updateHighlights()
+    for _, player in ipairs(players:GetPlayers()) do
+        if player ~= localPlayer and toggleState then
+            addHighlight(player)
+        end
+
+        -- Listen for character respawns for everyone
+        if toggleState and not allConnections[player] then
+            allConnections[player] = player.CharacterAdded:Connect(function()
                 if toggleState then
                     addHighlight(player)
                 end
@@ -181,31 +195,17 @@ local function updateHighlights()
     end
 end
 
--- Function to update highlights for enemies (opposite team)
-local function updateEnemyHighlights()
-    for _, player in ipairs(players:GetPlayers()) do
-        if player.Team ~= localPlayer.Team then  -- Check if they are on the opposite team
-            addHighlight(player)
-        end
-
-        -- Listen for character respawns
-        if not connections[player] then
-            connections[player] = player.CharacterAdded:Connect(function()
-                if enemyToggleState then
-                    addHighlight(player)
-                end
-            end)
-        end
+local function cleanEnemyConnections()
+    for player, conn in pairs(enemyConnections) do
+        if conn then conn:Disconnect() end
+        enemyConnections[player] = nil
     end
 end
 
--- Cleanup function for connections
-local function cleanConnections()
-    for player, conn in pairs(connections) do
-        if conn then
-            conn:Disconnect()
-        end
-        connections[player] = nil
+local function cleanAllConnections()
+    for player, conn in pairs(allConnections) do
+        if conn then conn:Disconnect() end
+        allConnections[player] = nil
     end
 end
 
@@ -249,7 +249,7 @@ Main:AddButton({
 	Name = "Re-Execute Legacy",
 	Callback = function()
         OrionLib:Destroy()
-        wait(0.001)
+        wait(0.1)
         loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Loader.lua'))()
   	end    
 })
@@ -352,52 +352,54 @@ Visuals:AddToggle({
     Callback = function(Value)
         enemyToggleState = Value
         if Value then
-            -- Add highlights to enemies
             updateEnemyHighlights()
-
-            -- Listen for new players joining
-            connections["PlayerAdded"] = players.PlayerAdded:Connect(function(player)
-                player.CharacterAdded:Wait()
-                if enemyToggleState and player.Team ~= localPlayer.Team then
-                    addHighlight(player)
-                end
-            end)
+            
+            -- Listen for new enemies joining
+            if not enemyConnections["PlayerAdded"] then
+                enemyConnections["PlayerAdded"] = players.PlayerAdded:Connect(function(player)
+                    player.CharacterAdded:Wait()
+                    if enemyToggleState and player.Team ~= localPlayer.Team then
+                        addHighlight(player)
+                    end
+                end)
+            end
         else
-            -- Remove all enemy highlights and cleanup
+            -- Remove highlights for enemies and clean connections
             for _, player in ipairs(players:GetPlayers()) do
                 if player.Team ~= localPlayer.Team then
                     removeHighlight(player)
                 end
             end
-            cleanConnections()
+            cleanEnemyConnections()
         end
-    end    
+    end
 })
 
 Visuals:AddToggle({
-	Name = "Highlight ESP [ EVERYONE ]",
-	Default = false,
-	Callback = function(Value)
+    Name = "Highlight ESP [ EVERYONE ]",
+    Default = false,
+    Callback = function(Value)
         toggleState = Value
         if Value then
-            -- Add highlights to all players
             updateHighlights()
-
+            
             -- Listen for new players joining
-            connections["PlayerAdded"] = players.PlayerAdded:Connect(function(player)
-                player.CharacterAdded:Wait()
-                if toggleState then
-                    addHighlight(player)
-                end
-            end)
+            if not allConnections["PlayerAdded"] then
+                allConnections["PlayerAdded"] = players.PlayerAdded:Connect(function(player)
+                    player.CharacterAdded:Wait()
+                    if toggleState then
+                        addHighlight(player)
+                    end
+                end)
+            end
         else
-            -- Remove all highlights and cleanup
+            -- Remove highlights for everyone and clean connections
             for _, player in ipairs(players:GetPlayers()) do
                 removeHighlight(player)
             end
-            cleanConnections()
+            cleanAllConnections()
         end
-    end    
+    end
 })
 
 local Section = Visuals:AddSection({
