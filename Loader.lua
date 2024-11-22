@@ -1,6 +1,6 @@
 --///////////////////////////////////////////////////
 
--- Created by wasundefined
+-- Created by Ege
 -- Yes I used ChatGPT to configure some stuff lol
 -- Enjoy
 
@@ -220,7 +220,7 @@ local Window = OrionLib:MakeWindow({Name = "★ Legacy", HidePremium = false, Sa
 -- Notifications
 OrionLib:MakeNotification({
 	Name = "Legacy",
-	Content = "Legacy is set! Made by wasundefined.",
+	Content = "Legacy is set! Made by Ege.",
 	Image = "rbxassetid://1264515756",
 	Time = 69420
 })
@@ -236,9 +236,10 @@ local Section = Main:AddSection({
 	Name = "Information"
 })
 
-Main:AddParagraph("Message from wasundefined","Hi, Legacy is a script that contains a bunch of other scripts for most of the games on Roblox and it also has bunch of extra universal stuff in it.")
+Main:AddParagraph("Message from Ege:","Hi, Legacy is a script that contains a bunch of other scripts for most of the games on Roblox and it also has bunch of extra universal stuff in it.")
 Main:AddParagraph("What is Legacy for?","Its mainly for easy access to everything. I created a single script that contains bunch of scripts and features to easily access them from a single script and before you ask, yes I skidded a bunch of stuff to put in here and easily acces them. I guess you can call me a loser but yeah, I hope you enjoy it.")
-Main:AddParagraph("Discord: wasundefined","If you have a script that you want it to be included in Legacy, you can send them to me via discord.")
+Main:AddParagraph("About Script Hub Scripts:","None of the scripts in the script hub belongs to me and they all are open source scripts meaning you can find them in the internet by doing enough research.")
+Main:AddParagraph("Important Note from Ege:","I do not claim any responsibility if anything happens to your Roblox account. Use it at your own risk.")
 
 local Section = Main:AddSection({
 	Name = "Miscellaneous"
@@ -247,7 +248,7 @@ local Section = Main:AddSection({
 Main:AddButton({
 	Name = "Re-Execute Legacy",
 	Callback = function()
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/wasundefined/Legacy/refs/heads/main/Loader.lua'))()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Loader.lua'))()
   	end    
 })
 
@@ -265,35 +266,35 @@ local Section = Player:AddSection({
 Player:AddButton({
 	Name = "Fly [ X ]",
 	Callback = function()
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/wasundefined/Legacy/refs/heads/main/Essentials/Fly.lua'))()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Essentials/Fly.lua'))()
   	end    
 })
 
 Player:AddButton({
 	Name = "NoClip [ Z ]",
 	Callback = function()
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/wasundefined/Legacy/refs/heads/main/Essentials/NoClip.lua'))()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Essentials/NoClip.lua'))()
   	end    
 })
 
 Player:AddButton({
 	Name = "Click Teleport [ CTRL + LCLICK ]",
 	Callback = function()
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/wasundefined/Legacy/refs/heads/main/Essentials/ClickTP.lua'))()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Essentials/ClickTP.lua'))()
   	end    
 })
 
 Player:AddButton({
 	Name = "Infinite Jump",
 	Callback = function()
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/wasundefined/Legacy/refs/heads/main/Essentials/Infinite%20Jump.lua'))()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Essentials/Infinite%20Jump.lua'))()
   	end    
 })
 
 Player:AddButton({
 	Name = "Wall Walk",
 	Callback = function()
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/wasundefined/Legacy/refs/heads/main/Essentials/Wall%20Walk.lua'))()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Essentials/Wall%20Walk.lua'))()
   	end    
 })
 
@@ -515,7 +516,7 @@ local Section = Visuals:AddSection({
 Visuals:AddButton({
 	Name = "Super Low GFX [ FPS BOOSTER ]",
 	Callback = function()
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/wasundefined/Legacy/refs/heads/main/Essentials/Low%20GFX.lua'))()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Essentials/Low%20GFX.lua'))()
   	end    
 })
 
@@ -615,7 +616,7 @@ local Section = Game:AddSection({
 Game:AddButton({
 	Name = "ReJoin",
 	Callback = function()
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/wasundefined/Legacy/refs/heads/main/Essentials/ReJoin.lua'))()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/Legacy/refs/heads/main/Essentials/ReJoin.lua'))()
   	end    
 })
 
@@ -640,7 +641,7 @@ local Section = US:AddSection({
 US:AddButton({
 	Name = "Chat Spoofer",
 	Callback = function()
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/wasundefined/Legacy/refs/heads/main/Scripts/Chat%20Spoofer.lua'))()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Scripts/Chat%20Spoofer.lua'))()
   	end    
 })
 
@@ -666,6 +667,17 @@ local GS = Window:MakeTab({
 })
 
 local Section = GS:AddSection({
+	Name = "Rivals Scripts"
+})
+
+GS:AddButton({
+	Name = "Rivals - Aimbot | ESP | Silent Aim",
+	Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/tbao143/thaibao/refs/heads/main/TbaoHubRivals'))()
+  	end    
+})
+
+local Section = GS:AddSection({
 	Name = "Blade Ball Scripts"
 })
 
@@ -676,7 +688,16 @@ GS:AddButton({
   	end    
 })
 
+local Section = GS:AddSection({
+	Name = "Murder Mystery 2 Scripts"
+})
 
+GS:AddButton({
+	Name = "Murder Mystery 2 - Autofarm",
+	Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/itsnoctural/Utilities/refs/heads/main/MurderMystery2.lua"))()
+  	end    
+})
 
 -- Extra Scripts
 -- Box ESP Configuration
