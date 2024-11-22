@@ -615,7 +615,7 @@ local Section = GS:AddSection({
 })
 
 GS:AddButton({
-	Name = "Counter Blox - Aimbot | ESP | No-Spead | Infinite Ammo",
+	Name = "Counter Blox - Aimbot | ESP | No-Spread | Infinite Ammo",
 	Callback = function()
         loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Scripts/EtherealCB.lua'))()
   	end    
