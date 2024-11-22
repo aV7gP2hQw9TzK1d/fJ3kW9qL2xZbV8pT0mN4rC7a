@@ -37,7 +37,7 @@ local Window = Rayfield:CreateWindow({
 Rayfield:Destroy()
 
 -- Replace this with the game ID you want to check against
-local targetGameID = 301549746 -- Example Game ID
+local targetGameID = 301549746, 606849621 -- Example Game ID
 
 -- Get the current game ID
 local currentGameID = game.PlaceId
