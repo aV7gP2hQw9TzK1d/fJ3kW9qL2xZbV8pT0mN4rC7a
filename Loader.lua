@@ -326,6 +326,7 @@ Player:AddSlider({
 	ValueName = "WalkSpeed",
 	Callback = function(ws1)
 		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = ws1
+		getgenv().WalkSpeedValue = ws1
 	end    
 })
 
@@ -339,8 +340,37 @@ Player:AddSlider({
 	ValueName = "JumpPower",
 	Callback = function(jp1)
 		game.Players.LocalPlayer.Character.Humanoid.JumpPower = jp1
+		getgenv().JumpPowerValue = jp1
 	end    
 })
+
+getgenv().WalkSpeedValue = 16
+getgenv().JumpPowerValue = 50
+
+local loopActive = false
+local function updateHumanoidValues()
+	while loopActive do
+		local character = game.Players.LocalPlayer.Character
+		if character and character:FindFirstChild("Humanoid") then
+			character.Humanoid.WalkSpeed = getgenv().WalkSpeedValue
+			character.Humanoid.JumpPower = getgenv().JumpPowerValue
+		end
+		wait(0.5)
+	end
+end
+
+Player:AddToggle({
+	Name = "Lock Multiplier Values",
+	Default = false,
+	Callback = function(Value)
+		loopActive = Value
+		if loopActive then
+			spawn(updateHumanoidValues)
+		end
+	end    
+})
+
+Player:AddParagraph("Lock Multiplier Values Toggle","When its turned on, it will prevent your walkspeed/jumppower to be changed automaticly by the game once you reset your character or die so you won't have to manually adjust the changes everytime after you reset/die.")
 
 -- Visuals Tab
 local Visuals = Window:MakeTab({
