@@ -36,4 +36,15 @@ local Window = Rayfield:CreateWindow({
 
 Rayfield:Destroy()
 
-loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/1.lua'))()
+-- Replace this with the game ID you want to check against
+local targetGameID = 301549746 -- Example Game ID
+
+-- Get the current game ID
+local currentGameID = game.PlaceId
+
+-- Check if the current game ID matches the target game ID
+if currentGameID == targetGameID then
+   loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/CBRO%20Version.lua'))()
+else
+   loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Original%20Version.lua'))()
+end
