@@ -671,6 +671,17 @@ local GS = Window:MakeTab({
 })
 
 local Section = GS:AddSection({
+	Name = "Flee The Facility Scripts"
+})
+
+GS:AddButton({
+	Name = "Flee The Facility - ESP | Auto-Play | Never Fail",
+	Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/LeviTheOtaku/roblox-scripts/main/FTFHAX.lua",true))()
+  	end    
+})
+
+local Section = GS:AddSection({
 	Name = "Arsenal Scripts"
 })
 
