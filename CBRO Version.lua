@@ -249,6 +249,8 @@ Main:AddButton({
 	Name = "Re-Execute Legacy",
 	Callback = function()
         loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Loader.lua'))()
+        wait(0.001)
+        OrionLib:Destroy()
   	end    
 })
 
