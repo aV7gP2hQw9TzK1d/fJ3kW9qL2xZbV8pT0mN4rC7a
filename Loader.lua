@@ -40,14 +40,24 @@ Rayfield:Destroy()
 local targetGameID = {
     301549746,
     606849621
-}-- Example Game ID
+} -- Example Game IDs
 
 -- Get the current game ID
 local currentGameID = game.PlaceId
 
--- Check if the current game ID matches the target game ID
-if currentGameID == targetGameID then
-   loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/FIXED%20Version.lua'))()
+-- Function to check if the current game ID is in the target list
+local function isTargetGame(gameID)
+    for _, id in ipairs(targetGameID) do
+        if gameID == id then
+            return true
+        end
+    end
+    return false
+end
+
+-- Check if the current game ID matches any of the target game IDs
+if isTargetGame(currentGameID) then
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/CBRO%20Version.lua'))()
 else
-   loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Original%20Version.lua'))()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Original%20Version.lua'))()
 end
