@@ -620,7 +620,7 @@ local Section = Game:AddSection({
 Game:AddButton({
 	Name = "ReJoin",
 	Callback = function()
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/Legacy/refs/heads/main/Essentials/ReJoin.lua'))()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Essentials/ReJoin.lua'))()
   	end    
 })
 
