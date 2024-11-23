@@ -7,8 +7,33 @@
 --///////////////////////////////////////////////////
 
 -- Extra
--- X-Ray Configuration
 
+-- Rejoin Configuration
+local TeleportService = game:GetService("TeleportService")
+local Players = game:GetService("Players")
+local currentPlaceId = game.PlaceId -- Get the current game PlaceId
+
+-- Get the current server's instance ID
+local currentServerId = game.JobId
+
+-- Function to kick and rejoin the player in the same server
+local function kickAndRejoin()
+    local player = Players.LocalPlayer
+
+    -- Ensure the player is valid before proceeding
+    if player then
+        -- Inform the player they're rejoining
+        player:Kick("\n★ Legacy | Rejoining...")
+
+        -- Wait for the player to be kicked out of the game
+        wait(0)
+
+        -- Teleport the player to the same game instance (same server)
+        TeleportService:TeleportToPlaceInstance(currentPlaceId, currentServerId, player)
+    end
+end
+
+-- X-Ray Configuration
 -- Table to store original transparency values
 local originalTransparencies = {}
 
@@ -219,7 +244,7 @@ local Window = OrionLib:MakeWindow({Name = "★ Legacy", HidePremium = false, Sa
 
 -- Notifications
 OrionLib:MakeNotification({
-	Name = "Legacy",
+	Name = "★ Legacy",
 	Content = "Legacy is set! Made by Ege.",
 	Image = "rbxassetid://1264515756",
 	Time = 69420
@@ -606,6 +631,115 @@ Combat:AddSlider({
 		getgenv().Aimbot.Prediction.Y = Value
 	end    
 })
+
+-- Miscellaneous Tab
+local Misc = Window:MakeTab({
+	Name = "● Miscellaneous",
+	Icon = "rbxassetid://18569843302",
+	PremiumOnly = false
+})
+
+local Section = Misc:AddSection({
+	Name = "Teleportation"
+})
+
+
+-- Function to get all players except the local player
+local function getPlayers()
+    local players = {}
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if player ~= game.Players.LocalPlayer then
+            table.insert(players, player.Name)
+        end
+    end
+    return players
+end
+
+-- Create a dropdown with all players except the local player
+local selectedPlayerName = ""  -- Variable to store the selected player name
+local playerDropdown = Misc:AddDropdown({
+    Name = "Select a Player to Teleport",
+    Default = "",  -- No one selected by default
+    Options = getPlayers(),
+    Callback = function(Value)
+        selectedPlayerName = Value  -- Store the selected player's name
+        print("Selected player:", selectedPlayerName)
+    end    
+})
+
+-- Teleport button
+Misc:AddButton({
+    Name = "Teleport to the Selected Player",
+    Callback = function()
+        if selectedPlayerName == "" then
+            warn("No player selected!")
+            return
+        end
+        
+        -- Find the selected player by name
+        local selectedPlayer = game.Players:FindFirstChild(selectedPlayerName)
+        
+        if selectedPlayer and selectedPlayer.Character then
+            -- Teleport the local player to the selected player's position
+            local character = game.Players.LocalPlayer.Character
+            if character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                -- Set the CFrame of the local player's HumanoidRootPart to the selected player's HumanoidRootPart
+                character:SetPrimaryPartCFrame(selectedPlayer.Character.HumanoidRootPart.CFrame)
+            end
+        else
+            warn("Selected player or their character is not available!")
+        end
+    end    
+})
+
+
+local Section = Misc:AddSection({
+	Name = "Save Point"
+})
+
+local savedPosition = nil  -- Variable to store the saved position
+
+-- Save Current Position Button
+Misc:AddButton({
+    Name = "Save Current Position",
+    Callback = function()
+        -- Get the LocalPlayer and its HumanoidRootPart
+        local player = game.Players.LocalPlayer
+        local humanoidRootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+        
+        if humanoidRootPart then
+            -- Save the current CFrame of the HumanoidRootPart
+            savedPosition = humanoidRootPart.CFrame
+            print("Position saved!")
+        else
+            print("HumanoidRootPart not found!")
+        end
+    end
+})
+
+-- Teleport to the Saved Position Button
+Misc:AddButton({
+    Name = "Teleport to the Saved Position",
+    Callback = function()
+        -- Check if a saved position exists
+        if savedPosition then
+            -- Get the LocalPlayer and its HumanoidRootPart
+            local player = game.Players.LocalPlayer
+            local humanoidRootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+            
+            if humanoidRootPart then
+                -- Teleport the player to the saved position
+                humanoidRootPart.CFrame = savedPosition
+                print("Teleported to saved position!")
+            else
+                print("HumanoidRootPart not found!")
+            end
+        else
+            print("No saved position to teleport to!")
+        end
+    end
+})
+
 -- Game Tab
 local Game = Window:MakeTab({
 	Name = "● Game",
@@ -620,7 +754,7 @@ local Section = Game:AddSection({
 Game:AddButton({
 	Name = "ReJoin",
 	Callback = function()
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Essentials/ReJoin.lua'))()
+        kickAndRejoin()
   	end    
 })
 
@@ -653,6 +787,20 @@ US:AddButton({
 	Name = "Chat Bypasser",
 	Callback = function()
         loadstring(game:HttpGet('https://pastebin.com/raw/keSD0xcp'))()
+  	end    
+})
+
+US:AddButton({
+	Name = "Fling GUI",
+	Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Scripts/Fling.lua'))()
+  	end    
+})
+
+US:AddButton({
+	Name = "Fling All",
+	Callback = function()
+        loadstring(game:HttpGet("https://pastebin.com/raw/zqyDSUWX"))()
   	end    
 })
 
@@ -1002,5 +1150,29 @@ end)
 
 -- Update tracers every frame
 RunService.RenderStepped:Connect(updateTracers)
+
+-- Function to update the dropdown list of players
+local function updatePlayerDropdown()
+    -- Get the updated list of players
+    local playerNames = getPlayers()
+
+    -- Update the dropdown options
+    playerDropdown:SetOptions(playerNames)
+end
+
+-- Update the dropdown initially
+updatePlayerDropdown()
+
+-- Listen for players joining and update the dropdown
+game.Players.PlayerAdded:Connect(function(player)
+    -- Update dropdown when a new player joins
+    updatePlayerDropdown()
+end)
+
+-- Listen for players leaving and update the dropdown
+game.Players.PlayerRemoving:Connect(function(player)
+    -- Update dropdown when a player leaves
+    updatePlayerDropdown()
+end)
 
 --///////////////////////////////////////////////////
