@@ -7,6 +7,67 @@
 --///////////////////////////////////////////////////
 
 -- Extra
+-- Username ESP Configuration
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local enemyEspEnabled = false
+local everyoneEspEnabled = false
+local enemyBillboards = {}
+local everyoneBillboards = {}
+
+-- Function to create a BillboardGui for a player
+local function createBillboardGui(player)
+    local billboard = Instance.new("BillboardGui")
+    billboard.Size = UDim2.new(0, 80, 0, 50)
+    billboard.Adornee = player.Character:WaitForChild("Head")
+    billboard.AlwaysOnTop = true
+    
+    local nameLabel = Instance.new("TextLabel")
+    nameLabel.Size = UDim2.new(1, 0, 1, 0)
+    nameLabel.BackgroundTransparency = 1
+    nameLabel.Text = player.Name
+    nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    nameLabel.TextStrokeTransparency = 0
+    nameLabel.TextScaled = true
+    nameLabel.Parent = billboard
+    
+    billboard.Parent = player.Character:WaitForChild("Head")
+    return billboard
+end
+
+-- Function to update ESP for the enemy team players only
+local function updateEnemyEsp()
+    -- Clear any existing ESP
+    for _, billboard in pairs(enemyBillboards) do
+        billboard:Destroy()
+    end
+    enemyBillboards = {}
+
+    -- Add ESP only for enemy team players
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Team ~= LocalPlayer.Team and player.Character and player.Character:FindFirstChild("Head") then
+            local billboard = createBillboardGui(player)
+            table.insert(enemyBillboards, billboard)
+        end
+    end
+end
+
+-- Function to update ESP for all players
+local function updateEveryoneEsp()
+    -- Clear any existing ESP
+    for _, billboard in pairs(everyoneBillboards) do
+        billboard:Destroy()
+    end
+    everyoneBillboards = {}
+
+    -- Add ESP for all players
+    for _, player in pairs(Players:GetPlayers()) do
+        if player.Character and player.Character:FindFirstChild("Head") then
+            local billboard = createBillboardGui(player)
+            table.insert(everyoneBillboards, billboard)
+        end
+    end
+end
 
 -- Rejoin Configuration
 local TeleportService = game:GetService("TeleportService")
@@ -428,6 +489,70 @@ Visuals:AddToggle({
 })
 
 local Section = Visuals:AddSection({
+	Name = "Username ESP"
+})
+
+Visuals:AddToggle({
+    Name = "Username ESP [ ENEMY ]",
+    Default = false,
+    Callback = function(Value)
+        enemyEspEnabled = Value
+        if enemyEspEnabled then
+            updateEnemyEsp()
+        else
+            for _, billboard in pairs(enemyBillboards) do
+                billboard:Destroy()
+            end
+            enemyBillboards = {}
+        end
+    end
+})
+
+Visuals:AddToggle({
+    Name = "Username ESP [ EVERYONE ]",
+    Default = false,
+    Callback = function(Value)
+        everyoneEspEnabled = Value
+        if everyoneEspEnabled then
+            updateEveryoneEsp()
+        else
+            for _, billboard in pairs(everyoneBillboards) do
+                billboard:Destroy()
+            end
+            everyoneBillboards = {}
+        end
+    end
+})
+
+-- Update ESP when a player joins, leaves, or changes team
+Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function()
+        if enemyEspEnabled then
+            updateEnemyEsp()
+        end
+        if everyoneEspEnabled then
+            updateEveryoneEsp()
+        end
+    end)
+end)
+
+Players.PlayerRemoving:Connect(function()
+    if enemyEspEnabled then
+        updateEnemyEsp()
+    end
+    if everyoneEspEnabled then
+        updateEveryoneEsp()
+    end
+end)
+
+-- Update ESP if the local player changes teams
+LocalPlayer:GetPropertyChangedSignal("Team"):Connect(function()
+    if enemyEspEnabled then
+        updateEnemyEsp()
+    end
+end)
+
+local Section = Visuals:AddSection({
 	Name = "Tracers"
 })
 
@@ -714,6 +839,20 @@ local US = Window:MakeTab({
 
 local Section = US:AddSection({
 	Name = "Scripts"
+})
+
+US:AddButton({
+	Name = "Infinite Yield [ ADMIN COMMANDS ]",
+	Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/edgeiy/infiniteyield/master/source'))()
+  	end    
+})
+
+US:AddButton({
+	Name = "Dex Explorer",
+	Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Scripts/Dex.lua'))()
+  	end    
 })
 
 US:AddButton({
