@@ -39,7 +39,8 @@ Rayfield:Destroy()
 -- Replace this with the game ID you want to check against
 local targetGameID = {
     301549746,
-    606849621
+    606849621,
+    17625359962
 } -- Example Game IDs
 
 -- Get the current game ID
