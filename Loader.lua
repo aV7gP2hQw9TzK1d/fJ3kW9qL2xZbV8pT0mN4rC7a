@@ -1,3 +1,18 @@
+-- Roblox Script: Basit Bildirim
+local StarterGui = game:GetService("StarterGui")
+
+-- Bildirim Ayarları
+local title = "★ Legacy"
+local text = "Script is loading..."
+local duration = 5 -- Bildirimin ekranda kalacağı süre (saniye)
+
+-- Bildirimi Gönder
+StarterGui:SetCore("SendNotification", {
+    Title = title;
+    Text = text;
+    Duration = duration;
+})
+
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
