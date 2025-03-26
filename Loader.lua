@@ -16,9 +16,9 @@ StarterGui:SetCore("SendNotification", {
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-    Name = "Legacy | LOADING...",
+    Name = "★ Legacy | LOADING...",
     Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
-    LoadingTitle = "Legacy",
+    LoadingTitle = "★ Legacy | For Peak Quality",
     LoadingSubtitle = "by Ege",
     Theme = "Light", -- Check https://docs.sirius.menu/rayfield/configuration/themes
  
@@ -73,7 +73,7 @@ end
 
 -- Check if the current game ID matches any of the target game IDs
 if isTargetGame(currentGameID) then
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/FIXED%20Version.lua'))()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/New%20Fixed%20Version%20%5B%202025%20%5D.lua'))()
 else
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Original%20Version.lua'))()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/New%20Version%20%5B%202025%20%5D.lua'))()
 end
