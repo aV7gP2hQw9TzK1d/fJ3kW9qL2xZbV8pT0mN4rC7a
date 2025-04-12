@@ -16,7 +16,7 @@ StarterGui:SetCore("SendNotification", {
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-    Name = "★ Legacy | LOADING...",
+    Name = "★ Legacy | LAUNCHER",
     Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
     LoadingTitle = "★ Legacy | For Peak Quality",
     LoadingSubtitle = "by Ege",
@@ -49,31 +49,54 @@ local Window = Rayfield:CreateWindow({
     }
  })
 
-Rayfield:Destroy()
+ local Main = Window:CreateTab("★ Legacy", 11797834387) -- Title, Image
 
--- Replace this with the game ID you want to check against
-local targetGameID = {
-    301549746,
-    606849621,
-    17625359962
-} -- Example Game IDs
+ local Section = Main:CreateSection("★ Legacy Main Version")
 
--- Get the current game ID
-local currentGameID = game.PlaceId
+ local Button = Main:CreateButton({
+   Name = "★ Legacy",
+   Callback = function()
+      loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/New%20Version%20%5B%202025%20%5D.lua'))()
+   end,
+})
 
--- Function to check if the current game ID is in the target list
-local function isTargetGame(gameID)
-    for _, id in ipairs(targetGameID) do
-        if gameID == id then
-            return true
-        end
-    end
-    return false
-end
+local Paragraph = Main:CreateParagraph({Title = "★ Legacy", Content = "This is the main version of Legacy. Universal in most games."})
 
--- Check if the current game ID matches any of the target game IDs
-if isTargetGame(currentGameID) then
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/New%20Fixed%20Version%20%5B%202025%20%5D.lua'))()
-else
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/New%20Version%20%5B%202025%20%5D.lua'))()
-end
+local Section = Main:CreateSection("★ Legacy Fixed Version")
+
+local Button = Main:CreateButton({
+   Name = "★ Legacy | FIXED VERSION",
+   Callback = function()
+      loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/New%20Fixed%20Version%20%5B%202025%20%5D.lua'))()
+   end,
+})
+
+local Paragraph = Main:CreateParagraph({Title = "★ Legacy | FIXED VERSION", Content = "This is the fixed version of Legacy. If only the Player tab shows up when you execute the main version, execute this version instead."})
+
+local Other = Window:CreateTab("★ Legacy Jailbreak", 11797834387) -- Title, Image
+
+local Section = Other:CreateSection("★ Legitbreak Criminal Version")
+
+ local Button = Other:CreateButton({
+   Name = "★ Legitbreak | Criminal Version",
+   Callback = function()
+      loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Scripts/Legitbreak%20Criminal.lua'))()
+      wait(0)
+      Rayfield:Destroy()
+   end,
+})
+
+local Paragraph = Other:CreateParagraph({Title = "★ Legitbreak | Criminal Version", Content = "Another project of Legacy, this script is for Jailbreak and has Police Aimbot, Police ESP and Teleport Behind Doors in it. If you are going to play as a Criminal, use this version."})
+
+local Section = Other:CreateSection("★ Legitbreak Police Version")
+
+local Button = Other:CreateButton({
+   Name = "★ Legitbreak | Police Version",
+   Callback = function()
+      loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Scripts/Legitbreak%20Police.lua'))()
+      wait(0)
+      Rayfield:Destroy()
+   end,
+})
+
+local Paragraph = Other:CreateParagraph({Title = "★ Legitbreak | Police Version", Content = "Another project of Legacy, this script is for Jailbreak and has Criminal Aimbot, Criminal ESP and Teleport Behind Doors in it. If you are going to play as a Police, use this version."})
