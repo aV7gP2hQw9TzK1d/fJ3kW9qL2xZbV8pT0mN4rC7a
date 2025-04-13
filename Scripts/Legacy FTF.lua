@@ -528,19 +528,6 @@ Players.PlayerRemoving:Connect(removeTracer)
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 
--- Aimbot Settings
-getgenv().Aimbot = {
-    Status = false, -- Initially set to false
-    Keybind = 'RightClick',
-    Hitpart = 'Head',
-    Prediction = {
-        X = 0,
-        Y = 0,
-    },
-    Smoothness = 0, 
-    TeamCheck = false, -- Default to true, meaning the aimbot will only target opposite team players
-}
-
 -- Essentials
 local players = game:GetService("Players")
 local runService = game:GetService("RunService")
@@ -636,11 +623,11 @@ end
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-    Name = "ftf experimental [ private script ]",
+    Name = "★ Legacy | Flee The Facility",
     Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
-    LoadingTitle = "ftf experimental [ private script ]",
+    LoadingTitle = "★ Legacy | For Peak Quality",
     LoadingSubtitle = "by Ege",
-    Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+    Theme = "Light", -- Check https://docs.sirius.menu/rayfield/configuration/themes
  
     DisableRayfieldPrompts = false,
     DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
@@ -668,45 +655,69 @@ local Window = Rayfield:CreateWindow({
        Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
     }
  })
- local player = Window:CreateTab("player shit", 4483362458) -- Title, Image
- local Section = player:CreateSection("features")
+
+
+ -- Main Tab
+local Main = Window:CreateTab("● Main", 170940873)
+
+local Section = Main:CreateSection("Information")
+local Paragraph = Main:CreateParagraph({Title = "Message from Ege:", Content = "Hi, Legacy is a script that contains a bunch of other scripts for most of the games on Roblox and it also has bunch of extra universal stuff in it."})
+local Paragraph = Main:CreateParagraph({Title = "What is Legacy for?", Content = "Its mainly for easy access to everything. I created a single script that contains bunch of scripts and features to easily access them from a single script and before you ask, yes I skidded a bunch of stuff to put in here and easily access them. I guess you can call me a loser but yeah, I hope you enjoy it."})
+local Paragraph = Main:CreateParagraph({Title = "About Script Hub Scripts:", Content = "None of the scripts in the script hub belongs to me and they all are open source scripts meaning you can find them in the internet by doing enough research."})
+local Paragraph = Main:CreateParagraph({Title = "Important Note from Ege:", Content = "I do not claim any responsibility if anything happens to your Roblox account. Use it at your own risk."})
+local Paragraph = Main:CreateParagraph({Title = "Update Information", Content = "Legacy was discontinued in 2024 but in recent days I wanted to update it and change everything in it. You are currently using Legacy [ 2025 Version ] and trust me it is optimized even more compared to the older version."})
+
+local Section = Main:CreateSection("Miscellaneous")
+
+local Button = Main:CreateButton({
+    Name = "Re-Execute Legacy",
+    Callback = function()
+        Rayfield:Destroy()
+        wait(0.1)
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Loader.lua'))()
+    end,
+ })
+
+ 
+ local player = Window:CreateTab("● Player", 12823489098) -- Title, Image
+ local Section = player:CreateSection("Features")
  local Button = player:CreateButton({
-    Name = "fly (x)",
+    Name = "Fly [ X ]",
     Callback = function()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Essentials/Fly.lua'))()
     end,
  })
 
  local Button = player:CreateButton({
-    Name = "noclip (z)",
+    Name = "NoClip [ Z ]",
     Callback = function()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Essentials/NoClip.lua'))()
     end,
  })
 
  local Button = player:CreateButton({
-    Name = "hide mode (v)",
+    Name = "Hide Mode [ V ]",
     Callback = function()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Scripts/FTFHideMode.lua'))()
     end,
  })
 
  local Button = player:CreateButton({
-    Name = "click tp (ctrl + left click)",
+    Name = "Click Teleport [ CTRL + LCLICK ]",
     Callback = function()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Essentials/ClickTP.lua'))()
     end,
  })
 
  local Button = player:CreateButton({
-    Name = "inf jump",
+    Name = "Infinite Jump",
     Callback = function()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Essentials/Infinite%20Jump.lua'))()
     end,
  })
 
  local Toggle = player:CreateToggle({
-    Name = "peruvian cocaine addict mode",
+    Name = "Sprinting Mode",
     CurrentValue = false,
     Flag = "Toggle1",
     Callback = function(Value)
@@ -716,18 +727,20 @@ local Window = Rayfield:CreateWindow({
         end
     end
 })
-local Section = player:CreateSection("emergency run door")
+
+local Section = player:CreateSection("Extras")
+
 local Button = player:CreateButton({
-    Name = "hop servers",
+    Name = "Hop Servers",
     Callback = function()
         local Http = game:GetService("HttpService") local TPS = game:GetService("TeleportService") local Api = "https://games.roblox.com/v1/games/" local _place = game.PlaceId local _servers = Api.._place.."/servers/Public?sortOrder=Asc&limit=100" function ListServers(cursor) local Raw = game:HttpGet(_servers .. ((cursor and "&cursor="..cursor) or "")) return Http:JSONDecode(Raw) end local Server, Next; repeat local Servers = ListServers(Next) Server = Servers.data[1] Next = Servers.nextPageCursor until Server TPS:TeleportToPlaceInstance(_place,Server.id,game.Players.LocalPlayer)
     end,
  })
 
- local visual = Window:CreateTab("visual shit", 4483362458) -- Title, Image
- local Section = visual:CreateSection("everything about esp")
+ local visual = Window:CreateTab("● Visuals", 13321848320) -- Title, Image
+ local Section = visual:CreateSection("ESP")
  local Toggle = visual:CreateToggle({
-    Name = "box esp (everyone)",
+    Name = "Box ESP [ EVERYONE ]",
     CurrentValue = false,
     Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
     Callback = function(Value)
@@ -736,7 +749,7 @@ local Button = player:CreateButton({
  })
 
  local Toggle = visual:CreateToggle({
-    Name = "chams esp (everyone)",
+    Name = "Chams ESP [ EVERYONE ]",
     CurrentValue = false,
     Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
     Callback = function(Value)
@@ -764,7 +777,7 @@ local Button = player:CreateButton({
  })
 
  local Toggle = visual:CreateToggle({
-    Name = "username esp (everyone)",
+    Name = "Username ESP [ EVERYONE ]",
     CurrentValue = false,
     Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
     Callback = function(Value)
@@ -809,7 +822,7 @@ LocalPlayer:GetPropertyChangedSignal("Team"):Connect(function()
 end)
 
 local Toggle = visual:CreateToggle({
-    Name = "tracers (everyone)",
+    Name = "Tracers [ EVERYONE ]",
     CurrentValue = false,
     Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
     Callback = function(Value)
@@ -824,7 +837,7 @@ local Toggle = visual:CreateToggle({
     end,
  })
 
- local ftf1 = Window:CreateTab("ftf shit", 4483362458) -- Title, Image
+ local ftf1 = Window:CreateTab("● Flee The Facility", 78105527764905) -- Title, Image
 
 local RunService = game:GetService("RunService")
 
@@ -858,10 +871,10 @@ local function addHighlightToComputerTables()
     end
 end
 
- local Section = ftf1:CreateSection("computer shit")
+ local Section = ftf1:CreateSection("Computer Features")
 
  local Button = ftf1:CreateButton({
-    Name = "highlight all computers",
+    Name = "Computer ESP",
     Callback = function()
         for _, obj in ipairs(workspace:GetDescendants()) do
             if obj:IsA("Model") or obj:IsA("Part") then
@@ -945,12 +958,12 @@ end
 
 -- Create the button with the function
 local Button = ftf1:CreateButton({
-    Name = "tp to a random computer",
+    Name = "Teleport to PC",
     Callback = teleportToRandomComputer
 })
 
 local Button = ftf1:CreateButton({
-    Name = "silently hack a computer (same as auto finish but hacks only one pc)",
+    Name = "Silent Hacking [ DON'T MOVE ]",
     Callback = function()
         resizeTriggers()
         wait(0.01)
@@ -991,25 +1004,18 @@ local function placeWaypoint()
     end
 end
 
- local Section = ftf1:CreateSection("other")
+ local Section = ftf1:CreateSection("Extras")
 
 
 local Button = ftf1:CreateButton({
-    Name = "auto finish round (beta, might bug)",
+    Name = "Auto Finish Round [ BETA ]",
     Callback = function()
         autoFarmFTF()
     end,
  })
 
  local Button = ftf1:CreateButton({
-    Name = "triggerpart extender",
-    Callback = function()
-        resizeTriggers()
-    end,
- })
-
- local Button = ftf1:CreateButton({
-    Name = "auto + silently exit (use it only if there a no computers left or else it will bug)",
+    Name = "Silent Exit [ DON'T MOVE ] [ ONLY USE WHEN NO COMPUTERS ARE LEFT! ]",
     Callback = function()
         resizeTriggers()
         wait(0.01)
@@ -1018,7 +1024,7 @@ local Button = ftf1:CreateButton({
  })
 
  local Button = ftf1:CreateButton({
-    Name = "save a captured player",
+    Name = "Silent Save a Captured Player [ DON'T MOVE ]",
     Callback = function()
         resizeTriggers()
         wait(0.01)
@@ -1029,12 +1035,12 @@ local Button = ftf1:CreateButton({
  local function teleportUp()
     local player = game.Players.LocalPlayer
     if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-        player.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame + Vector3.new(0, 50, 0)
+        player.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame + Vector3.new(0, 200, 0)
     end
 end
 
 local Button = ftf1:CreateButton({
-    Name = "teleport above the map",
+    Name = "Teleport Above the Map",
     Callback = function()
         teleportUp()
     end,
@@ -1042,20 +1048,20 @@ local Button = ftf1:CreateButton({
 
  -- Create the button
 local WaypointButton = ftf1:CreateButton({
-    Name = "set waypoint",
+    Name = "Set Waypoint",
     Callback = placeWaypoint
 })
 
 local UserInputService = game:GetService("UserInputService")
 
-local Label = ftf1:CreateLabel("never fail hacking is built inside the script meaning its on all the time", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
+local Label = ftf1:CreateLabel("Never Fail Hacking is built inside the script itself.", 4728059490, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
 
-local extrass = Window:CreateTab("extra shit", 4483362458) -- Title, Image
+local extrass = Window:CreateTab("● Miscellaneous", 6953992690) -- Title, Image
 
-local Section = extrass:CreateSection("ftf hiding pos saves")
+local Section = extrass:CreateSection("Hiding Position")
 
  local Button = extrass:CreateButton({
-    Name = "save hiding pos",
+    Name = "Save Hiding Position",
     Callback = function()
     -- Get the LocalPlayer and its HumanoidRootPart
     local player = game.Players.LocalPlayer
@@ -1072,7 +1078,7 @@ local Section = extrass:CreateSection("ftf hiding pos saves")
  })
 
  local Button = extrass:CreateButton({
-    Name = "load hiding pos",
+    Name = "Load Hiding Position",
     Callback = function()
     -- Check if a saved position exists
     if savedPosition then
@@ -1093,10 +1099,10 @@ local Section = extrass:CreateSection("ftf hiding pos saves")
     end,
  })
 
- local Section = extrass:CreateSection("ftf computer pos saves")
+ local Section = extrass:CreateSection("Computer Position")
 
  local Button = extrass:CreateButton({
-    Name = "save computer pos",
+    Name = "Save Computer Position",
     Callback = function()
     -- Get the LocalPlayer and its HumanoidRootPart
     local player = game.Players.LocalPlayer
@@ -1114,7 +1120,7 @@ local Section = extrass:CreateSection("ftf hiding pos saves")
 
  
  local Button = extrass:CreateButton({
-    Name = "load computer pos",
+    Name = "Load Computer Position",
     Callback = function()
     -- Check if a saved position exists
     if savedPosition2 then
