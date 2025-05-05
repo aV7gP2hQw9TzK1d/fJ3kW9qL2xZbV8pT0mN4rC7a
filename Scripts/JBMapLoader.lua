@@ -81,8 +81,8 @@ local function moveCameraToLocations()
 		lockCameraPosition()
 
 		-- Update estimated time remaining
-		local remaining = #locations - i + 1
-		local estimatedTime = remaining * 2
+		local remaining = #locations - i + 0.5
+		local estimatedTime = remaining * 1
 		timeLabel.Text = "Time left: " .. estimatedTime .. "s"
 
 		-- Tween camera to location
