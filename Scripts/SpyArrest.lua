@@ -1,3 +1,68 @@
+local targetPlayerName = "username"
+-- Press "Y" to Teleport to the target after reaching it.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Use _G to persist the value across executions
+if not _G.MapLoadedChecker then
+    _G.MapLoadedChecker = false  -- Initialize the global variable if it doesn't exist
+end
+
+function LoadMap()
+    if _G.MapLoadedChecker == false then
+        _G.MapLoadedChecker = true  -- Set to true after the map is loaded
+        wait(0.1)
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Scripts/JBMapLoader.lua'))()
+    else
+        print("Map is already loaded.")
+    end
+end
+
+LoadMap()
+
+
 -- LocalScript in StarterPlayerScripts
 
 local UserInputService = game:GetService("UserInputService")
@@ -66,13 +131,23 @@ local humanoid = character:WaitForChild("Humanoid")
 local camera = workspace.CurrentCamera
 
 -- Target setup
-local targetPlayer = Players:FindFirstChild(targetPlayerName)
+local targetPlayer = nil
+for _, player in pairs(Players:GetPlayers()) do
+    -- Check if the player's username or display name matches the targetPlayerName
+    if string.lower(player.Name):sub(1, #targetPlayerName) == string.lower(targetPlayerName) or 
+       string.lower(player.DisplayName):sub(1, #targetPlayerName) == string.lower(targetPlayerName) then
+        targetPlayer = player
+        break
+    end
+end
+
 if not targetPlayer then return warn("Target player not found") end
+
 
 local targetHRP = targetPlayer.Character and targetPlayer.Character:WaitForChild("HumanoidRootPart")
 if not targetHRP then return warn("Target HRP not found") end
 
-local SPEED = 200
+local SPEED = 185
 local followingAbove = false
 local groundFollowStarted = false
 local fallProtection = true
@@ -140,13 +215,13 @@ UserInputService.InputBegan:Connect(function(input, gpe)
 		camera.CameraType = Enum.CameraType.Custom
 
 		-- Instantly teleport to ground follow start position
-		local startPos = targetHRP.Position + Vector3.new(0, 2, 0)
+		local startPos = targetHRP.Position + Vector3.new(0, 0, 0)
 		humanoidRootPart.CFrame = CFrame.new(startPos)
 
 		-- Begin ground follow
 		task.spawn(function()
 			while true do
-				local targetPos = targetHRP.Position + Vector3.new(0, 2, 0)
+				local targetPos = targetHRP.Position + Vector3.new(0, 0, 0)
 				local direction = targetPos - humanoidRootPart.Position
 				local distance = direction.Magnitude
 				local delta = RunService.Heartbeat:Wait()
