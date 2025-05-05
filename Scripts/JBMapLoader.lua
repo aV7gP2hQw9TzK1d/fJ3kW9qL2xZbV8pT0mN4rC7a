@@ -87,12 +87,12 @@ local function moveCameraToLocations()
 
 		-- Tween camera to location
 		local goal = { CFrame = CFrame.new(location) }
-		local tweenInfo = TweenInfo.new(2, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
+		local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
 		local tween = TweenService:Create(Camera, tweenInfo, goal)
 		tween:Play()
 		tween.Completed:Wait()
 
-		wait(2)
+		wait(1.3)
 		unlockCameraPosition()
 	end
 
