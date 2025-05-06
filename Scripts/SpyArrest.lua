@@ -1,67 +1,36 @@
-local targetPlayerName = "username"
--- Press "Y" to Teleport to the target after reaching it.
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/memejames/elerium-v2-ui-library//main/Library", true))()
 
+local window = library:AddWindow("★ Legacy | Spy Arrest V1", {
+	main_color = Color3.fromRGB(65 ,65, 65),
+	min_size = Vector2.new(310, 240),
+	can_resize = false,
+})
 
+local AR = window:AddTab("Spy Arrest")
+AR:Show()
 
+AR:AddLabel("Target Username")
 
+local targetPlayerName = ""
 
+AR:AddTextBox("Input Target's Username or Display Name", function(text)
+	targetPlayerName = text
+end)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
--- Use _G to persist the value across executions
+-- Load Map Function
 if not _G.MapLoadedChecker then
-    _G.MapLoadedChecker = false  -- Initialize the global variable if it doesn't exist
+    _G.MapLoadedChecker = false
 end
 
 function LoadMap()
-    if _G.MapLoadedChecker == false then
-        _G.MapLoadedChecker = true  -- Set to true after the map is loaded
+    if not _G.MapLoadedChecker then
+        _G.MapLoadedChecker = true
         wait(0.1)
         loadstring(game:HttpGet('https://raw.githubusercontent.com/aV7gP2hQw9TzK1d/fJ3kW9qL2xZbV8pT0mN4rC7a/refs/heads/main/Scripts/JBMapLoader.lua'))()
     else
-        print("Map is already loaded.")
+        print("Map already loaded.")
     end
 end
-
-LoadMap()
-
 
 -- LocalScript in StarterPlayerScripts
 
@@ -117,111 +86,86 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
 	end
 end)
 
-
-
-
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
-
-local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-local humanoid = character:WaitForChild("Humanoid")
-local camera = workspace.CurrentCamera
-
--- Target setup
-local targetPlayer = nil
-for _, player in pairs(Players:GetPlayers()) do
-    -- Check if the player's username or display name matches the targetPlayerName
-    if string.lower(player.Name):sub(1, #targetPlayerName) == string.lower(targetPlayerName) or 
-       string.lower(player.DisplayName):sub(1, #targetPlayerName) == string.lower(targetPlayerName) then
-        targetPlayer = player
-        break
-    end
-end
-
-if not targetPlayer then return warn("Target player not found") end
-
-
-local targetHRP = targetPlayer.Character and targetPlayer.Character:WaitForChild("HumanoidRootPart")
-if not targetHRP then return warn("Target HRP not found") end
-
-local SPEED = 185
-local followingAbove = false
-local groundFollowStarted = false
-local fallProtection = true
-
--- Initial teleport up
-humanoidRootPart.CFrame = humanoidRootPart.CFrame + Vector3.new(0, 2000, 0)
-
--- Fall protection
-task.spawn(function()
-	while fallProtection do
-		humanoid.PlatformStand = true
-		humanoidRootPart.Velocity = Vector3.zero
-		RunService.Heartbeat:Wait()
+AR:AddButton("Travel to Target", function()
+	if targetPlayerName == "" then
+		warn("Target username not set!")
+		return
 	end
-end)
 
--- Travel horizontally toward target (XZ only)
-task.spawn(function()
-	local reachedDestination = false
-	while not reachedDestination do
-		local targetXZ = Vector3.new(targetHRP.Position.X, humanoidRootPart.Position.Y, targetHRP.Position.Z)
-		local direction = targetXZ - humanoidRootPart.Position
-		local distance = direction.Magnitude
+	local Players = game:GetService("Players")
+	local RunService = game:GetService("RunService")
+	local UserInputService = game:GetService("UserInputService")
 
-		if distance < 5 then
-			reachedDestination = true
+	local player = Players.LocalPlayer
+	local character = player.Character or player.CharacterAdded:Wait()
+	local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+	local humanoid = character:WaitForChild("Humanoid")
+	local camera = workspace.CurrentCamera
+
+	-- Find target player
+	local targetPlayer = nil
+	for _, plr in pairs(Players:GetPlayers()) do
+		if string.lower(plr.Name):sub(1, #targetPlayerName) == string.lower(targetPlayerName)
+			or string.lower(plr.DisplayName):sub(1, #targetPlayerName) == string.lower(targetPlayerName) then
+			targetPlayer = plr
 			break
 		end
-
-		local delta = RunService.Heartbeat:Wait()
-		local step = math.min(SPEED * delta, distance)
-		humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position + direction.Unit * step)
 	end
 
-	-- Start following above target
-	camera.CameraSubject = targetPlayer.Character:WaitForChild("Head")
-	camera.CameraType = Enum.CameraType.Attach
-	followingAbove = true
+	if not targetPlayer then
+		warn("Target player not found!")
+		return
+	end
 
+	local targetHRP = targetPlayer.Character and targetPlayer.Character:WaitForChild("HumanoidRootPart")
+	if not targetHRP then
+		warn("Target HRP not found!")
+		return
+	end
+
+	local SPEED = 185
+	local followingAbove = false
+	local groundFollowStarted = false
+	local fallProtection = true
+
+	-- Initial teleport up
+	humanoidRootPart.CFrame = humanoidRootPart.CFrame + Vector3.new(0, 2000, 0)
+
+	-- Fall protection
 	task.spawn(function()
-		while followingAbove do
-			local targetPos = targetHRP.Position + Vector3.new(0, 2000, 0)
-			local direction = targetPos - humanoidRootPart.Position
-			local distance = direction.Magnitude
-			local delta = RunService.Heartbeat:Wait()
-
-			if distance > 0.1 then
-				local step = math.min(SPEED * delta, distance)
-				humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position + direction.Unit * step)
-			end
+		while fallProtection do
+			humanoid.PlatformStand = true
+			humanoidRootPart.Velocity = Vector3.zero
+			RunService.Heartbeat:Wait()
 		end
 	end)
-end)
 
--- Switch to ground follow when Y is pressed
-UserInputService.InputBegan:Connect(function(input, gpe)
-	if gpe or groundFollowStarted then return end
-	if input.KeyCode == Enum.KeyCode.Y then
-		followingAbove = false
-		fallProtection = false
-		groundFollowStarted = true
+	-- Travel horizontally toward target (XZ only)
+	task.spawn(function()
+		local reachedDestination = false
+		while not reachedDestination do
+			local targetXZ = Vector3.new(targetHRP.Position.X, humanoidRootPart.Position.Y, targetHRP.Position.Z)
+			local direction = targetXZ - humanoidRootPart.Position
+			local distance = direction.Magnitude
 
-		humanoid.PlatformStand = false
-		camera.CameraSubject = player.Character:WaitForChild("Head")
-		camera.CameraType = Enum.CameraType.Custom
+			if distance < 5 then
+				reachedDestination = true
+				break
+			end
 
-		-- Instantly teleport to ground follow start position
-		local startPos = targetHRP.Position + Vector3.new(0, 0, 0)
-		humanoidRootPart.CFrame = CFrame.new(startPos)
+			local delta = RunService.Heartbeat:Wait()
+			local step = math.min(SPEED * delta, distance)
+			humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position + direction.Unit * step)
+		end
 
-		-- Begin ground follow
+		-- Follow above target
+		camera.CameraSubject = targetPlayer.Character:WaitForChild("Head")
+		camera.CameraType = Enum.CameraType.Attach
+		followingAbove = true
+
 		task.spawn(function()
-			while true do
-				local targetPos = targetHRP.Position + Vector3.new(0, 0, 0)
+			while followingAbove do
+				local targetPos = targetHRP.Position + Vector3.new(0, 2000, 0)
 				local direction = targetPos - humanoidRootPart.Position
 				local distance = direction.Magnitude
 				local delta = RunService.Heartbeat:Wait()
@@ -232,5 +176,44 @@ UserInputService.InputBegan:Connect(function(input, gpe)
 				end
 			end
 		end)
-	end
+	end)
+
+	-- Switch to ground follow when Y is pressed
+	UserInputService.InputBegan:Connect(function(input, gpe)
+		if gpe or groundFollowStarted then return end
+		if input.KeyCode == Enum.KeyCode.Y then
+			followingAbove = false
+			fallProtection = false
+			groundFollowStarted = true
+
+			humanoid.PlatformStand = false
+			camera.CameraSubject = player.Character:WaitForChild("Head")
+			camera.CameraType = Enum.CameraType.Custom
+
+			local startPos = targetHRP.Position
+			humanoidRootPart.CFrame = CFrame.new(startPos)
+
+			task.spawn(function()
+				while true do
+					local targetPos = targetHRP.Position
+					local direction = targetPos - humanoidRootPart.Position
+					local distance = direction.Magnitude
+					local delta = RunService.Heartbeat:Wait()
+
+					if distance > 0.1 then
+						local step = math.min(SPEED * delta, distance)
+						humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position + direction.Unit * step)
+					end
+				end
+			end)
+		end
+	end)
 end)
+
+AR:AddButton("Load Map", function()
+    LoadMap()
+end)
+
+AR:AddLabel("★ Press [Y] to Teleport to Target after reaching.")
+AR:AddLabel("★ Press [ENTER] after typing Target's username.")
+AR:AddLabel("★ Press [F1] to view the Bounty Board.")
