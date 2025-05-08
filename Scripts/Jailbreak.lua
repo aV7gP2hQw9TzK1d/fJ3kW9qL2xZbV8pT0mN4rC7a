@@ -751,7 +751,7 @@ local slider = Settings:AddSlider("Travel Speed", function(psps)
     speed = psps  -- Update the speed variable with the value from the slider
 end, {
     ["min"] = 200,  -- Minimum value for speed
-    ["max"] = 750,  -- Maximum value for speed
+    ["max"] = 550,  -- Maximum value for speed
 })
 
 slider:Set(0) -- Needed
