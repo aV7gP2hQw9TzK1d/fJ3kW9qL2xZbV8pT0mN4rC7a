@@ -92,7 +92,7 @@ local function moveCameraToLocations()
 		tween:Play()
 		tween.Completed:Wait()
 
-		wait(1.3)
+		wait(0.4)
 		unlockCameraPosition()
 	end
 
